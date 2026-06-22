@@ -1,14 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+    https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <maven.compiler.source>21</maven.compiler.source>
-     <maven.compiler.target>21</maven.compiler.target>
-     
-     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-
 
     <groupId>com.fashionstores</groupId>
     <artifactId>FashionStores</artifactId>
@@ -17,7 +12,19 @@
 
     <name>FashionStores</name>
 
+    <!-- JAVA VERSION -->
+
+    <properties>
+
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    </properties>
+
     <dependencies>
+
+        <!-- Servlet API -->
 
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -26,6 +33,8 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- JSP API -->
+
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
@@ -33,25 +42,37 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- MySQL Connector -->
+
         <dependency>
-		    <groupId>com.mysql</groupId>
-		    <artifactId>mysql-connector-j</artifactId>
-		    <version>9.3.0</version>
-		</dependency>
-        
-          <!-- other dependencies -->
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>9.3.0</version>
+        </dependency>
 
-    <dependency>
-        <groupId>jakarta.servlet.jsp.jstl</groupId>
-        <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-        <version>3.0.0</version>
-    </dependency>
+        <!-- JSTL API -->
 
-    <dependency>
-        <groupId>org.glassfish.web</groupId>
-        <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-        <version>3.0.1</version>
-    </dependency>
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <!-- JSTL Implementation -->
+
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
+        <!-- BCrypt for Password Hashing -->
+
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
 
     </dependencies>
 
