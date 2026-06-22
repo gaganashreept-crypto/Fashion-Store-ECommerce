@@ -65,9 +65,25 @@
 
 
                 <input type="password"
+                       id="password"
                        name="password"
                        placeholder="Password"
                        required>
+
+                <!-- SHOW PASSWORD -->
+
+                <div class="show-password">
+
+                    <input type="checkbox"
+                           id="showPassword">
+
+                    <label for="showPassword">
+
+                        Show Password
+
+                    </label>
+
+                </div>
 
 
 
@@ -96,6 +112,29 @@
         </div>
 
     </section>
+
+
+    <script>
+
+        const passwordField =
+            document.getElementById("password");
+
+        const showPassword =
+            document.getElementById("showPassword");
+
+        showPassword.addEventListener("change", () => {
+
+            if(showPassword.checked){
+
+                passwordField.type = "text";
+            }
+            else{
+
+                passwordField.type = "password";
+            }
+        });
+
+    </script>
 
 </body>
 
