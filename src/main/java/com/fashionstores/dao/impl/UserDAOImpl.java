@@ -8,32 +8,35 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.fashionstores.dao.UserDAO;
 import com.fashionstores.model.User;
 import com.fashionstores.util.DBConnection;
 
 public class UserDAOImpl implements UserDAO {
-	
-	private Connection connection;
 
-	public UserDAOImpl() {
+    private Connection connection;
 
-	    connection = DBConnection.getConnection();
-	}
+    public UserDAOImpl() {
+
+        connection = DBConnection.getConnection();
+    }
 
     // Register User
+
     @Override
     public boolean registerUser(User user) {
 
         boolean isRegistered = false;
 
-        String query = "INSERT INTO users(name, email, password, phone, address) VALUES (?, ?, ?, ?, ?)";
+        String query =
+                "INSERT INTO users(name, email, password, phone, address) VALUES (?, ?, ?, ?, ?)";
 
         try {
 
-            Connection connection = DBConnection.getConnection();
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
 
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());
@@ -41,7 +44,8 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setString(4, user.getPhone());
             preparedStatement.setString(5, user.getAddress());
 
-            int rowsAffected = preparedStatement.executeUpdate();
+            int rowsAffected =
+                    preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
 
@@ -57,34 +61,57 @@ public class UserDAOImpl implements UserDAO {
     }
 
     // Login User
+
     @Override
     public User loginUser(String email, String password) {
 
         User user = null;
 
-        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+        String query =
+                "SELECT * FROM users WHERE email = ?";
 
         try {
 
-            Connection connection = DBConnection.getConnection();
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
 
             preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet =
+                    preparedStatement.executeQuery();
 
             if (resultSet.next()) {
 
-                user = new User();
+                // Get hashed password from DB
 
-                user.setUserId(resultSet.getInt("user_id"));
-                user.setName(resultSet.getString("name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password"));
-                user.setPhone(resultSet.getString("phone"));
-                user.setAddress(resultSet.getString("address"));
+                String hashedPassword =
+                        resultSet.getString("password");
+
+                // Compare entered password with hashed password
+
+                if (BCrypt.checkpw(password,
+                                   hashedPassword)) {
+
+                    user = new User();
+
+                    user.setUserId(
+                            resultSet.getInt("user_id"));
+
+                    user.setName(
+                            resultSet.getString("name"));
+
+                    user.setEmail(
+                            resultSet.getString("email"));
+
+                    user.setPassword(
+                            resultSet.getString("password"));
+
+                    user.setPhone(
+                            resultSet.getString("phone"));
+
+                    user.setAddress(
+                            resultSet.getString("address"));
+                }
             }
 
         } catch (SQLException e) {
@@ -96,22 +123,24 @@ public class UserDAOImpl implements UserDAO {
     }
 
     // Get User By ID
+
     @Override
     public User getUserById(int userId) {
 
         User user = null;
 
-        String query = "SELECT * FROM users WHERE user_id = ?";
+        String query =
+                "SELECT * FROM users WHERE user_id = ?";
 
         try {
 
-            Connection connection = DBConnection.getConnection();
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
 
             preparedStatement.setInt(1, userId);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet =
+                    preparedStatement.executeQuery();
 
             if (resultSet.next()) {
 
@@ -134,18 +163,19 @@ public class UserDAOImpl implements UserDAO {
     }
 
     // Update User
+
     @Override
     public boolean updateUser(User user) {
 
         boolean isUpdated = false;
 
-        String query = "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, address = ? WHERE user_id = ?";
+        String query =
+                "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, address = ? WHERE user_id = ?";
 
         try {
 
-            Connection connection = DBConnection.getConnection();
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
 
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());
@@ -154,7 +184,8 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setString(5, user.getAddress());
             preparedStatement.setInt(6, user.getUserId());
 
-            int rowsAffected = preparedStatement.executeUpdate();
+            int rowsAffected =
+                    preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
 
@@ -170,22 +201,24 @@ public class UserDAOImpl implements UserDAO {
     }
 
     // Delete User
+
     @Override
     public boolean deleteUser(int userId) {
 
         boolean isDeleted = false;
 
-        String query = "DELETE FROM users WHERE user_id = ?";
+        String query =
+                "DELETE FROM users WHERE user_id = ?";
 
         try {
 
-            Connection connection = DBConnection.getConnection();
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
 
             preparedStatement.setInt(1, userId);
 
-            int rowsAffected = preparedStatement.executeUpdate();
+            int rowsAffected =
+                    preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
 
@@ -201,6 +234,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     // Get All Users
+
     @Override
     public List<User> getAllUsers() {
 
@@ -210,11 +244,11 @@ public class UserDAOImpl implements UserDAO {
 
         try {
 
-            Connection connection = DBConnection.getConnection();
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
 
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet =
+                    preparedStatement.executeQuery();
 
             while (resultSet.next()) {
 
@@ -239,22 +273,24 @@ public class UserDAOImpl implements UserDAO {
     }
 
     // Check Email Exists
+
     @Override
     public boolean isEmailExists(String email) {
 
         boolean exists = false;
 
-        String query = "SELECT * FROM users WHERE email = ?";
+        String query =
+                "SELECT * FROM users WHERE email = ?";
 
         try {
 
-            Connection connection = DBConnection.getConnection();
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
 
             preparedStatement.setString(1, email);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet =
+                    preparedStatement.executeQuery();
 
             if (resultSet.next()) {
 
@@ -269,3 +305,4 @@ public class UserDAOImpl implements UserDAO {
         return exists;
     }
 }
+
