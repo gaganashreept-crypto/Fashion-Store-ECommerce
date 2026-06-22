@@ -41,28 +41,46 @@ public class RegisterServlet extends HttpServlet {
     }
 
 
-
     @Override
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
 
             throws ServletException, IOException {
 
-        String name =
-                request.getParameter("name");
+        String name = request.getParameter("name");
 
-        String email =
-                request.getParameter("email");
+        String email = request.getParameter("email");
 
-        String password =
-                request.getParameter("password");
+        String password = request.getParameter("password");
 
-        String phone =
-                request.getParameter("phone");
+        String phone = request.getParameter("phone");
 
-        String address =
-                request.getParameter("address");
+        String address = request.getParameter("address");
 
+
+        // PASSWORD VALIDATION
+
+        if (!password.matches(
+                "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")) {
+
+            request.setAttribute(
+                    "errorMessage",
+                    "Password must contain minimum 8 characters, one uppercase, one lowercase, one number and one special character.");
+
+            request.getRequestDispatcher(
+                    "/WEB-INF/register.jsp")
+                    .forward(request, response);
+
+            return;
+        }
+
+
+        // HASH PASSWORD
+
+        String hashedPassword =
+                org.mindrot.jbcrypt.BCrypt.hashpw(
+                        password,
+                        org.mindrot.jbcrypt.BCrypt.gensalt());
 
 
         User user = new User();
@@ -71,20 +89,18 @@ public class RegisterServlet extends HttpServlet {
 
         user.setEmail(email);
 
-        user.setPassword(password);
+        user.setPassword(hashedPassword);
 
         user.setPhone(phone);
 
         user.setAddress(address);
 
 
-
         boolean isRegistered =
                 userDAO.registerUser(user);
 
 
-
-        if(isRegistered) {
+        if (isRegistered) {
 
             response.sendRedirect(
                     request.getContextPath()
